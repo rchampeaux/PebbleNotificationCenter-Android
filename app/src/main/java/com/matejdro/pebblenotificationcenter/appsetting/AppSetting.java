@@ -32,6 +32,7 @@ public enum AppSetting
     MAXIMUM_TEXT_LENGTH("maximumTextLength", Integer.toString(NotificationSendingModule.DEFAULT_TEXT_LIMIT)),
     USE_WEAR_GROUP_NOTIFICATIONS("useWearGroupNotifications", true),
     ALWAYS_PARSE_STATUSBAR_NOTIFICATION("alwaysParseStatusbarNotification", false),
+    INCLUDE_ACCOUNT_NAME("includeAccountName", true),
     RESPECT_ANDROID_INTERRUPT_FILTER("respectAndroidInterruptFilter", false),
     TITLE_FONT("fontTitle", 6),
     SUBTITLE_FONT("fontSubtitle", 5),

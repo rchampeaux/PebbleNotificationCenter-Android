@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class NotificationParser {
+    private final int ACCOUNT_NAME_VIEW_ID = 16908393;
 	public String title;
 	public String text;
 
@@ -38,11 +39,12 @@ public class NotificationParser {
 				return;
 			}
 		}
-				
+
+        AppSettingStorage settingStorage = pebbleNotification.getSettingStorage(context);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-			getExtraBigData(notification);
+			getExtraBigData(notification, settingStorage);
 		else
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 	}
 	
 	@TargetApi(value = Build.VERSION_CODES.JELLY_BEAN)
@@ -198,13 +200,13 @@ public class NotificationParser {
         return text.substring(0, pos).trim().concat(insert).trim().concat(text.substring(pos)).trim();
     }
 
-	private void getExtraData(Notification notification) {
+	private void getExtraData(Notification notification, AppSettingStorage settingStorage) {
 		RemoteViews views = notification.contentView;
 		if (views == null) {
 			return;
 		}
 
-		parseRemoteView(views);
+		parseRemoteView(views, settingStorage);
 
 //		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		try {
@@ -219,20 +221,20 @@ public class NotificationParser {
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void getExtraBigData(Notification notification) {
+	private void getExtraBigData(Notification notification, AppSettingStorage settingStorage) {
 		RemoteViews views = null;
 		try {
 			views = notification.bigContentView;
 		} catch (NoSuchFieldError e) {
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 			return;
 		}
 		if (views == null) {
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 			return;
 		}
 
-		parseRemoteView(views);
+		parseRemoteView(views, settingStorage);
 
 //		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		try {
@@ -244,7 +246,7 @@ public class NotificationParser {
 //		}
 	}
 
-	private void parseRemoteView(RemoteViews views)
+	private void parseRemoteView(RemoteViews views, AppSettingStorage settingStorage)
 	{
 		try {
 			Class remoteViewsClass = RemoteViews.class;
@@ -295,7 +297,13 @@ public class NotificationParser {
 					if (title == null || title.length() < value.length())
 						title = value.toString().trim();
 				}
-				else
+                else if (viewId == ACCOUNT_NAME_VIEW_ID)
+                {
+                    if (settingStorage.getBoolean(AppSetting.INCLUDE_ACCOUNT_NAME)) {
+                        text += formatCharSequence(value) + "\n\n";
+                    }
+                }
+                else
 					text += formatCharSequence(value) + "\n\n";
 
 			}
