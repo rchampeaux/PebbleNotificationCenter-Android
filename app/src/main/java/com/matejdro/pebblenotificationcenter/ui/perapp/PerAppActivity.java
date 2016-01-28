@@ -135,6 +135,8 @@ public class PerAppActivity extends Activity implements ColorPickerDialogFragmen
         category.add(new SpinnerItem(settingsStorage, AppSetting.TITLE_FONT, R.array.pebbleFonts, R.string.settingFontTitle, R.string.settingDescriptionWatchappOnly, R.array.fontValues));
         category.add(new SpinnerItem(settingsStorage, AppSetting.SUBTITLE_FONT, R.array.pebbleFonts, R.string.settingFontSubtitle, R.string.settingDescriptionWatchappOnly, R.array.fontValues));
         category.add(new SpinnerItem(settingsStorage, AppSetting.BOCY_FONT, R.array.pebbleFonts, R.string.settingFontBody, R.string.settingDescriptionWatchappOnly, R.array.fontValues));
+        category.add(new CheckBoxItem(settingsStorage, AppSetting.WORD_WRAP_TITLE, R.string.settingWordWrapTitle, R.string.settingWordWrapTitleDescription));
+        category.add(new CheckBoxItem(settingsStorage, AppSetting.WORD_WRAP_SUBTITLE, R.string.settingWordWrapSubtitle, R.string.settingWordWrapSubtitleDescription));
         category.add(new CheckBoxItem(settingsStorage, AppSetting.ALWAYS_PARSE_STATUSBAR_NOTIFICATION, R.string.settingAlwaysParseStatusbarNotification, R.string.settingAlwaysParseStatusbarNotificationDescription));
         category.add(new CheckBoxItem(settingsStorage, AppSetting.HIDE_NOTIFICATION_TEXT, R.string.settingHideNotificationText, R.string.settingHideNotificationTextDescription));
         if (version(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)) category.add(new ColorPickerItem(settingsStorage, AppSetting.STATUSBAR_COLOR, R.string.settingStatusbarColor, R.string.settingStatusbarColorDescription));

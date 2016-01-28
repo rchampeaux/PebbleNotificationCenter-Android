@@ -520,6 +520,10 @@
     <string name="settingFontSubtitle">Subtitle font</string>
     <string name="settingFontBody">Body font</string>
     <string name="settingDescriptionWatchappOnly">(Only works on watchapp notifications.)</string>
+    <string name="settingWordWrapTitle">Word Wrap Title</string>
+    <string name="settingWordWrapTitleDescription">Word-wrap the title text across multiple lines if the text is longer than a single line. Uncheck to display the title text on a single line with an ellipsis if necessary.</string>
+    <string name="settingWordWrapSubtitle">Word Wrap Subtitle</string>
+    <string name="settingWordWrapSubtitleDescription">Word-wrap the subtitle text across multiple lines if the text is longer than a single line. Uncheck to display the title text on a single line with an ellipsis if necessary.</string>
     <string name="settingAlwaysParseStatusbarNotification">Always parse statusbar notification</string>
     <string name="settingAlwaysParseStatusbarNotificationDescription">Always try to retrieve text from actual statusbar notification instead of using text that is separately provided by app itself. Use when notification on Pebble is different from one in statusbar.</string>
     <string name="settingHideNotificationText">Hide notification text</string>

@@ -430,6 +430,9 @@ public class NotificationSendingModule extends CommModule
             flags |= (byte) (settingStorage.getInt(AppSetting.SELECT_HOLD_ACTION) == 2 ? 0x20 : 0);
         }
 
+        flags |= (byte) (settingStorage.getBoolean(AppSetting.WORD_WRAP_TITLE) ? 0x40 : 0);
+        flags |= (byte) (settingStorage.getBoolean(AppSetting.WORD_WRAP_SUBTITLE) ? 0x80 : 0);
+
         byte[] configBytes = new byte[18 + vibrationPattern.size()];
         configBytes[0] = flags;
         configBytes[1] = (byte) (periodicVibrationInterval >>> 0x08);

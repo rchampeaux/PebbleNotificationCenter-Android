@@ -36,6 +36,8 @@ public enum AppSetting
     TITLE_FONT("fontTitle", 6),
     SUBTITLE_FONT("fontSubtitle", 5),
     BOCY_FONT("fontBody", 4),
+    WORD_WRAP_TITLE("wordWrapTitle", true),
+    WORD_WRAP_SUBTITLE("wordWrapSubtitle", true),
     HIDE_NOTIFICATION_TEXT("hideNotiifcationText", false),
     STATUSBAR_COLOR("statusbarColor", 0x00000000),
     SHOW_IMAGE("showImage", true),
