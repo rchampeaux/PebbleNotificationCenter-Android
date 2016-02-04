@@ -37,6 +37,7 @@ public enum AppSetting
     SUBTITLE_FONT("fontSubtitle", 5),
     BOCY_FONT("fontBody", 4),
     HIDE_NOTIFICATION_TEXT("hideNotiifcationText", false),
+    IGNORE_SUBTEXT("ignoreSubText", false),
     STATUSBAR_COLOR("statusbarColor", 0x00000000),
     SHOW_IMAGE("showImage", true),
     NATIVE_NOTIFICATION_ICON("nativeNotificationIcon", NativeNotificationIcon.AUTOMATIC),

@@ -20,8 +20,12 @@ import com.matejdro.pebblenotificationcenter.appsetting.SharedPreferencesAppStor
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 public class NotificationParser {
-	public String title;
+    private static final int SUBTEXT_VIEW_ID = 16908393;
+
+    public String title;
 	public String text;
 
 	public NotificationParser(Context context, PebbleNotification pebbleNotification, Notification notification)
@@ -38,11 +42,12 @@ public class NotificationParser {
 				return;
 			}
 		}
-				
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-			getExtraBigData(notification);
+
+        AppSettingStorage settingStorage = pebbleNotification.getSettingStorage(context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+			getExtraBigData(notification, settingStorage);
 		else
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 	}
 	
 	@TargetApi(value = Build.VERSION_CODES.JELLY_BEAN)
@@ -198,13 +203,13 @@ public class NotificationParser {
         return text.substring(0, pos).trim().concat(insert).trim().concat(text.substring(pos)).trim();
     }
 
-	private void getExtraData(Notification notification) {
+	private void getExtraData(Notification notification, AppSettingStorage settingStorage) {
 		RemoteViews views = notification.contentView;
 		if (views == null) {
 			return;
 		}
 
-		parseRemoteView(views);
+		parseRemoteView(views, settingStorage);
 
 //		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		try {
@@ -219,20 +224,20 @@ public class NotificationParser {
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void getExtraBigData(Notification notification) {
+	private void getExtraBigData(Notification notification, AppSettingStorage settingStorage) {
 		RemoteViews views = null;
 		try {
 			views = notification.bigContentView;
 		} catch (NoSuchFieldError e) {
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 			return;
 		}
 		if (views == null) {
-			getExtraData(notification);
+			getExtraData(notification, settingStorage);
 			return;
 		}
 
-		parseRemoteView(views);
+		parseRemoteView(views, settingStorage);
 
 //		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		try {
@@ -244,7 +249,7 @@ public class NotificationParser {
 //		}
 	}
 
-	private void parseRemoteView(RemoteViews views)
+	private void parseRemoteView(RemoteViews views, AppSettingStorage settingStorage)
 	{
 		try {
 			Class remoteViewsClass = RemoteViews.class;
@@ -255,12 +260,14 @@ public class NotificationParser {
 
 			actionsField.setAccessible(true);
 
+            boolean ignoreSubtext = settingStorage.getBoolean(AppSetting.IGNORE_SUBTEXT);
+
 			ArrayList<Object> actions = (ArrayList<Object>) actionsField.get(views);
 			for (Object action : actions) {
                 if (!action.getClass().getName().contains("$ReflectionAction"))
 					continue;
 
-				Field typeField = action.getClass().getDeclaredField("type");
+                Field typeField = action.getClass().getDeclaredField("type");
 				typeField.setAccessible(true);
 				int type = typeField.getInt(action);
                 if (type != 9 && type != 10)
@@ -290,11 +297,20 @@ public class NotificationParser {
 					continue;
 				}
 
+                Timber.d("parseRemoteView: viewId: " + viewId + " value: '" + value + "'");
+
 				if (viewId == android.R.id.title)
 				{
 					if (title == null || title.length() < value.length())
 						title = value.toString().trim();
 				}
+                else if (viewId == SUBTEXT_VIEW_ID) {
+                    if (!ignoreSubtext) {
+                        text += formatCharSequence(value) + "\n\n";
+                    } else {
+                        Timber.d("parseRemoteView: ignored subtext");
+                    }
+                }
 				else
 					text += formatCharSequence(value) + "\n\n";
 
