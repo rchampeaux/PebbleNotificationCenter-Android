@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class NotificationParser {
-    private static final int SUBTEXT_VIEW_ID = 16908393;
+    private static final int SUBTEXT_VIEW_ID = 16908405;
 
     public String title;
 	public String text;
